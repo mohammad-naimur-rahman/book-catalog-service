@@ -1,12 +1,30 @@
 import { z } from 'zod';
 
+const getAllUsersZodSchema = z.object({
+  headers: z.object({
+    authorization: z.string().nonempty({
+      message: 'Authorization is required',
+    }),
+  }),
+});
+
 const getOrDeleteUserZodSchema = z.object({
+  headers: z.object({
+    authorization: z.string().nonempty({
+      message: 'Authorization is required',
+    }),
+  }),
   params: z.object({
     id: z.string(),
   }),
 });
 
 const updateUserZodSchema = z.object({
+  headers: z.object({
+    authorization: z.string().nonempty({
+      message: 'Authorization is required',
+    }),
+  }),
   params: z.object({
     id: z.string(),
   }),
@@ -22,6 +40,7 @@ const updateUserZodSchema = z.object({
 });
 
 export const UserValidation = {
+  getAllUsersZodSchema,
   getOrDeleteUserZodSchema,
   updateUserZodSchema,
 };
