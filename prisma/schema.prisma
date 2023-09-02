@@ -63,11 +63,11 @@ model ReviewAndRating {
 
 model OrderedBook {
   id       String   @id @default(uuid())
-  orderId  String
   bookId   String
+  orderId String
   quantity Int
-  order    Order    @relation(fields: [orderId], references: [id])
   book     Book     @relation(fields: [bookId], references: [id])
+  order     Order     @relation(fields: [orderId], references: [id])
 
   @@map("orderedBooks")
 }
