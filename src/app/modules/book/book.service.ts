@@ -12,7 +12,17 @@ const createBook = async (payload: Book): Promise<Book> => {
   return book;
 };
 
-const getAllBooks = async (req: Request): Promise<Book[]> => {
+type IBooksWithMeta = {
+  data: Book[];
+  meta: {
+    page: number;
+    size: number;
+    total: number;
+    totalPage: number;
+  };
+};
+
+const getAllBooks = async (req: Request): Promise<IBooksWithMeta> => {
   const reqUrl = `https://example.com` + req.url.split('/')[1];
   const url = new URL(reqUrl);
   const queries = url.searchParams;
@@ -87,7 +97,17 @@ const getAllBooks = async (req: Request): Promise<Book[]> => {
     where,
   });
 
-  return books;
+  const total = await prisma.book.count();
+
+  return {
+    data: books,
+    meta: {
+      page,
+      size: take,
+      total,
+      totalPage: Math.ceil(total / take),
+    },
+  };
 };
 
 const getBookByCategory = async (categoryId: string): Promise<Book[]> => {

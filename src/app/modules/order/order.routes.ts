@@ -21,4 +21,11 @@ router.post(
   OrderController.createOrder
 );
 
+router.get(
+  '/:id',
+  validateRequest(OrderValidation.getOrdersZodSchema),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOER),
+  OrderController.getSingleOrder
+);
+
 export const OrderRoutes = router;

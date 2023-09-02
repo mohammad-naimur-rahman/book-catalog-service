@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
@@ -16,6 +17,17 @@ const getAllUsers = catchAsync(async (req, res) => {
 
 const getUserById = catchAsync(async (req, res) => {
   const user = await UserService.getUserById(req.params.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    data: user,
+    message: 'User retrieved successfully!',
+  });
+});
+
+const getUserProfile = catchAsync(async (req, res) => {
+  const user = await UserService.getUserProfile((req as any).user);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -65,6 +77,7 @@ const makeAdmin = catchAsync(async (req, res) => {
 export const UserController = {
   getAllUsers,
   getUserById,
+  getUserProfile,
   updateUser,
   deleteUser,
   makeAdmin,

@@ -18,7 +18,7 @@ router
   .route('/:id')
   .get(
     validateRequest(UserValidation.getOrDeleteUserZodSchema),
-    auth(ENUM_USER_ROLE.ADMIN),
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOER),
     UserController.getUserById
   )
   .patch(

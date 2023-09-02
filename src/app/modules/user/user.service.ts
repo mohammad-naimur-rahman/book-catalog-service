@@ -1,5 +1,6 @@
 import { User } from '@prisma/client';
 import httpStatus from 'http-status';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 
@@ -20,6 +21,27 @@ const getUserById = async (id: string): Promise<User | null> => {
   }
 
   return user;
+};
+
+const getUserProfile = async (user: {
+  userId: string;
+  role: ENUM_USER_ROLE;
+}): Promise<User | null> => {
+  if (!user.userId) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Access denied');
+  }
+
+  const specificUser = await prisma.user.findUnique({
+    where: {
+      id: user.userId,
+    },
+  });
+
+  if (!specificUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  return specificUser;
 };
 
 const updateUser = async (
@@ -92,6 +114,7 @@ const makeAdmin = async (id: string): Promise<User | null> => {
 export const UserService = {
   getAllUsers,
   getUserById,
+  getUserProfile,
   updateUser,
   deleteUser,
   makeAdmin,
