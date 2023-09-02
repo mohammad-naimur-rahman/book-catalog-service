@@ -1,5 +1,5 @@
 {
-  "name": "book-catalog-backend-assignment",
+  "name": "book-catalog-service",
   "version": "1.0.0",
   "description": "Book Catallog Backend Service",
   "main": "src/server.ts",
@@ -7,8 +7,8 @@
   "license": "ISC",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "start": "node dist/server.ts",
-    "build": "tsc",
+    "start": "prisma generate && node dist/server.ts",
+    "build": "prisma generate && tsc",
     "migrate": "npx prisma migrate dev",
     "generate": "npx prisma generate",
     "studio": "npx prisma studio",
