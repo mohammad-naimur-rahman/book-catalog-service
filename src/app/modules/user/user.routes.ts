@@ -16,12 +16,25 @@ router.get(
 
 router
   .route('/:id')
-  .get(auth(ENUM_USER_ROLE.ADMIN), UserController.getUserById)
-  .patch(auth(ENUM_USER_ROLE.ADMIN), UserController.updateUser)
-  .delete(auth(ENUM_USER_ROLE.ADMIN), UserController.deleteUser);
+  .get(
+    validateRequest(UserValidation.getOrDeleteUserZodSchema),
+    auth(ENUM_USER_ROLE.ADMIN),
+    UserController.getUserById
+  )
+  .patch(
+    validateRequest(UserValidation.getOrDeleteUserZodSchema),
+    auth(ENUM_USER_ROLE.ADMIN),
+    UserController.updateUser
+  )
+  .delete(
+    validateRequest(UserValidation.getOrDeleteUserZodSchema),
+    auth(ENUM_USER_ROLE.ADMIN),
+    UserController.deleteUser
+  );
 
 router.patch(
   '/make-admin/:id',
+  validateRequest(UserValidation.getOrDeleteUserZodSchema),
   auth(ENUM_USER_ROLE.ADMIN),
   UserController.makeAdmin
 );
