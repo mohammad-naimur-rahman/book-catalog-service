@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(uuid()) // UUID
+  name       String
+  email      String    @unique
+  password   String
+  role       String    // 'admin' or 'customer'
+  contactNo  String
+  address    String
+  profileImg String
+  reviewAndRatings ReviewAndRating[]
+  orders Order[]
+}
+
+
+model Category {
+  id    String @id @default(uuid()) // UUID
+  title String
+  books Book[]
+}
+
+model Book {
+  id              String   @id @default(uuid()) // UUID
+  title           String
+  author          String
+  price           Float
+  genre           String
+  publicationDate DateTime
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+  reviewAndRatings ReviewAndRating[]
+  orderedBooks OrderedBook[]
+}
+
+model ReviewAndRating {
+  id     String @id @default(uuid()) // UUID
+  review String
+  rating Int
+  userId String
+  bookId String
+  user   User   @relation(fields: [userId], references: [id])
+  book   Book   @relation(fields: [bookId], references: [id])
+}
+
+model OrderedBook {
+  id       String   @id @default(uuid()) // UUID
+  orderId  String
+  bookId   String
+  quantity Int
+  order    Order    @relation(fields: [orderId], references: [id])
+  book     Book     @relation(fields: [bookId], references: [id])
+}
+
+model Order {
+  id        String        @id @default(uuid()) // UUID
+  userId    String
+  status    String        @default("pending")
+  createdAt DateTime
+  user      User          @relation(fields: [userId], references: [id])
+  orderedBooks OrderedBook[]
+}
