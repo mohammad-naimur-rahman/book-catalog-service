@@ -1,7 +1,9 @@
-import { Book } from '@prisma/client';
+import { Book, Prisma } from '@prisma/client';
+import { Request } from 'express';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
+import { bookSearchableFileds } from './book.constants';
 
 const createBook = async (payload: Book): Promise<Book> => {
   const book = await prisma.book.create({
@@ -10,73 +12,88 @@ const createBook = async (payload: Book): Promise<Book> => {
   return book;
 };
 
-// const getAllBooks = async (query: string): Promise<Book[]> => {
-//   const books = await prisma.book.findMany({
-//     include: {
-//       category: true,
-//       reviewAndRatings: true,
-//     },
-//   });
-//   return books;
-// };
-
-const getAllBooks = async (req: Request): Promise<null> => {
-  const url = new URL(req.url);
+const getAllBooks = async (req: Request): Promise<Book[]> => {
+  const reqUrl = `https://example.com` + req.url.split('/')[1];
+  const url = new URL(reqUrl);
   const queries = url.searchParams;
-  console.log(queries);
-  // const {
-  //   page = 1,
-  //   size = 10,
-  //   sortBy = 'createdAt',
-  //   sortOrder = 'desc',
-  //   minPrice,
-  //   maxPrice,
-  //   category,
-  //   search,
-  // } = query;
-  // // Define Prisma query filters based on the query parameters
-  // const filters: Prisma.BookWhereInput = {};
-  // // Pagination
-  // const skip = (page - 1) * size;
-  // const take = size;
-  // // Sorting
-  // const orderBy: Prisma.BookOrderByInput = {};
-  // orderBy[sortBy] = sortOrder;
-  // // Filtering
-  // if (minPrice !== undefined) {
-  //   filters.price = { gte: parseFloat(minPrice) };
-  // }
-  // if (maxPrice !== undefined) {
-  //   filters.price = { ...filters.price, lte: parseFloat(maxPrice) };
-  // }
-  // if (category !== undefined) {
-  //   filters.categoryId = category;
-  // }
-  // if (search !== undefined) {
-  //   filters.OR = [
-  //     { title: { contains: search, mode: 'insensitive' } },
-  //     { author: { contains: search, mode: 'insensitive' } },
-  //     { genre: { contains: search, mode: 'insensitive' } },
-  //   ];
-  // }
-  // const books = await prisma.book.findMany({
-  //   where: filters,
-  //   include: {
-  //     category: true,
-  //     reviewAndRatings: true,
-  //   },
-  //   skip,
-  //   take,
-  //   orderBy,
-  // });
-  // return books;
-  return null;
+
+  // Pagination
+  const page = Number(queries.get('page')) || 1;
+  const take = Number(queries.get('size')) || 10;
+  const skip = (page - 1) * take;
+
+  // Sorting
+  const sortBy = queries.get('sortBy') || 'publicationDate';
+  const sortOrder = queries.get('sortOrder') || 'desc';
+
+  // Searching and Filtering
+  const conditions = [];
+
+  // Searching
+  const searchTerm = queries.get('search');
+  if (searchTerm) {
+    conditions.push({
+      OR: bookSearchableFileds.map(field => ({
+        [field]: {
+          contains: searchTerm,
+          mode: 'insensitive',
+        },
+      })),
+    });
+  }
+
+  // Filtering
+  const category = queries.get('category');
+  if (category) {
+    conditions.push({
+      categoryId: category,
+    });
+  }
+
+  // Price Filtering
+  const minPrice = queries.get('minPrice');
+  const maxPrice = queries.get('maxPrice');
+
+  const minPriceNumValue = minPrice && Number(minPrice);
+  const maxPriceNumValue = maxPrice && Number(maxPrice);
+  if (minPriceNumValue) {
+    conditions.push({
+      price: {
+        gte: minPriceNumValue,
+      },
+    });
+  }
+  if (maxPriceNumValue) {
+    conditions.push({
+      price: {
+        lte: maxPriceNumValue,
+      },
+    });
+  }
+
+  const where: Prisma.BookWhereInput =
+    conditions.length > 0 ? { AND: conditions } : {};
+
+  const books = await prisma.book.findMany({
+    include: {
+      category: true,
+      reviewAndRatings: true,
+    },
+    skip,
+    take,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+    where,
+  });
+
+  return books;
 };
 
-const getBookByCategory = async (id: string): Promise<Book[]> => {
+const getBookByCategory = async (categoryId: string): Promise<Book[]> => {
   const books = await prisma.book.findMany({
     where: {
-      categoryId: id,
+      categoryId,
     },
     include: {
       category: true,

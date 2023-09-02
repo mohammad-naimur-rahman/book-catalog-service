@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const createBookZodValidation = z.object({
+const createBookZodSchema = z.object({
   headers: z.object({
     authorization: z.string().nonempty({
       message: 'Authorization is required',
@@ -14,8 +14,8 @@ const createBookZodValidation = z.object({
       message: 'Author is required',
     }),
     price: z.number({ required_error: 'Price is required' }),
-    puoblicationDate: z.date({
-      required_error: 'Puoblication date is required',
+    publicationDate: z.string({
+      required_error: 'Publication date is required',
     }),
     categoryId: z.string().nonempty({
       message: 'Category Id is required',
@@ -23,7 +23,7 @@ const createBookZodValidation = z.object({
   }),
 });
 
-const updateCategoryZodValidation = z.object({
+const updateCategoryZodSchema = z.object({
   headers: z.object({
     authorization: z.string().nonempty({
       message: 'Authorization is required',
@@ -33,12 +33,21 @@ const updateCategoryZodValidation = z.object({
     title: z.string().optional(),
     author: z.string().optional(),
     price: z.number().optional(),
-    puoblicationDate: z.date().optional(),
+    publicationDate: z.string().optional(),
     categoryId: z.string().nonempty().optional(),
   }),
 });
 
+const deleteBookZodSchema = z.object({
+  headers: z.object({
+    authorization: z.string().nonempty({
+      message: 'Authorization is required',
+    }),
+  }),
+});
+
 export const BookValidation = {
-  createBookZodValidation,
-  updateCategoryZodValidation,
+  createBookZodSchema,
+  updateCategoryZodSchema,
+  deleteBookZodSchema,
 };

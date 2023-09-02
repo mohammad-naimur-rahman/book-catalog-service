@@ -1,6 +1,3 @@
-export const bookFilterableFields: string[] = [
-  'search',
-  'minPrice',
-  'maxPrice',
-  'category',
-];
+export const bookFilterableFields: string[] = ['category'];
+
+export const bookSearchableFileds: string[] = ['title', 'author', 'genre'];
