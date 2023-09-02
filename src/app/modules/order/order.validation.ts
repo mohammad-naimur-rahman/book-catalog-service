@@ -16,6 +16,15 @@ const createOrderZodSchema = z.object({
   }),
 });
 
+const getOrdersZodSchema = z.object({
+  headers: z.object({
+    authorization: z.string().nonempty({
+      message: 'Authorization is required',
+    }),
+  }),
+});
+
 export const OrderValidation = {
   createOrderZodSchema,
+  getOrdersZodSchema,
 };

@@ -1,4 +1,5 @@
 import { Order, OrderedBook } from '@prisma/client';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 import { asyncForEach } from '../../../helpers/asyncForeach';
 import prisma from '../../../shared/prisma';
 import { IOrderBody } from './order.interface';
@@ -40,6 +41,29 @@ const createOrder = async (
   return orderWithBooksIds!;
 };
 
+const getOrders = async (user: { userId: string; role: ENUM_USER_ROLE }) => {
+  const isAdmin = user.role === ENUM_USER_ROLE.ADMIN;
+  let orders = [];
+  if (isAdmin) {
+    orders = await prisma.order.findMany({
+      include: {
+        orderedBooks: true,
+      },
+    });
+  } else {
+    orders = await prisma.order.findMany({
+      where: {
+        userId: user.userId,
+      },
+      include: {
+        orderedBooks: true,
+      },
+    });
+  }
+  return orders;
+};
+
 export const OrderService = {
   createOrder,
+  getOrders,
 };

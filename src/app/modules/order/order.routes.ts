@@ -7,6 +7,13 @@ import { OrderValidation } from './order.validation';
 
 const router = Router();
 
+router.get(
+  '/',
+  validateRequest(OrderValidation.getOrdersZodSchema),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOER),
+  OrderController.getAllORders
+);
+
 router.post(
   '/create-order',
   validateRequest(OrderValidation.createOrderZodSchema),
