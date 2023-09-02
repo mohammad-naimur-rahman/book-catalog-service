@@ -7,7 +7,7 @@
   "license": "ISC",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "start": "prisma generate && node dist/server.ts",
+    "start": "node dist/server.ts",
     "build": "prisma generate && tsc",
     "migrate": "npx prisma migrate dev",
     "generate": "npx prisma generate",
