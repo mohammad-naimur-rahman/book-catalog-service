@@ -14,10 +14,14 @@ const auth =
       if (!token) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
       }
+      const accessToken = token.split(' ')[1];
       // verify token
       let verifiedUser = null;
 
-      verifiedUser = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
+      verifiedUser = jwtHelpers.verifyToken(
+        accessToken,
+        config.jwt.secret as Secret
+      );
 
       req.user = verifiedUser; // role  , userid
 
