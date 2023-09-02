@@ -6,7 +6,11 @@ import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
-import { ILoginUser, ILoginUserResponse, ISignupUser } from './auth.interface';
+import {
+  ILoginUser,
+  ILoginUserResponse,
+  IRefreshTokenResponse,
+} from './auth.interface';
 import { hashPasswordHook } from './auth.utils';
 
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
@@ -46,110 +50,67 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   };
 };
 
-const signupUser = async (payload: User): Promise<ISignupUser> => {
+const signupUser = async (payload: User): Promise<User> => {
   // Omiiting user role so that user can not set him / her as admin
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  const { password, role, ...userData } = payload;
+  const { password, role, email, ...userData } = payload;
+
+  const ifUserExists = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (ifUserExists) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists');
+  }
 
   const hashedPassword = await hashPasswordHook(password);
 
   const createdUser = await prisma.user.create({
-    data: { password: hashedPassword, ...userData },
+    data: { password: hashedPassword, email, ...userData },
   });
 
-  const accessToken = jwtHelpers.createToken(
-    { userId: createdUser.id, role: createdUser.role },
+  return createdUser;
+};
+
+const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
+  let verifiedToken = null;
+  try {
+    verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_secret as Secret
+    );
+  } catch (err) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
+  }
+
+  const { userId } = verifiedToken;
+
+  // check if user exists
+  const isUserExist = await await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
+
+  //generate new token
+  const newAccessToken = jwtHelpers.createToken(
+    {
+      id: isUserExist.id,
+      role: isUserExist.role,
+    },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
 
-  const refreshToken = jwtHelpers.createToken(
-    { userId: createdUser.id, role: createdUser.role },
-    config.jwt.refresh_secret as Secret,
-    config.jwt.refresh_expires_in as string
-  );
-
   return {
-    data: createdUser,
-    token: {
-      accessToken,
-      refreshToken,
-    },
+    accessToken: newAccessToken,
   };
 };
-
-// const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
-//   //verify token
-//   // invalid token - synchronous
-//   let verifiedToken = null;
-//   try {
-//     verifiedToken = jwtHelpers.verifyToken(
-//       token,
-//       config.jwt.refresh_secret as Secret
-//     );
-//   } catch (err) {
-//     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
-//   }
-
-//   const { userId } = verifiedToken;
-
-//   // tumi delete hye gso  kintu tumar refresh token ase
-//   // checking deleted user's refresh token
-
-//   const isUserExist = await User.isUserExist(userId);
-//   if (!isUserExist) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
-//   }
-//   //generate new token
-
-//   const newAccessToken = jwtHelpers.createToken(
-//     {
-//       id: isUserExist.id,
-//       role: isUserExist.role,
-//     },
-//     config.jwt.secret as Secret,
-//     config.jwt.expires_in as string
-//   );
-
-//   return {
-//     accessToken: newAccessToken,
-//   };
-// };
-
-// const changePassword = async (
-//   user: JwtPayload | null,
-//   payload: IChangePassword
-// ): Promise<void> => {
-//   const { oldPassword, newPassword } = payload;
-
-//   // // checking is user exist
-//   // const isUserExist = await User.isUserExist(user?.userId);
-
-//   //alternative way
-//   const targetedUser = await User.findOne({ id: user?.userId }).select(
-//     '+password'
-//   );
-
-//   if (!targetedUser) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
-//   }
-
-//   // checking old password
-//   if (
-//     targetedUser.password &&
-//     !(await User.isPasswordMatched(oldPassword, targetedUser.password))
-//   ) {
-//     throw new ApiError(httpStatus.UNAUTHORIZED, 'Old Password is incorrect');
-//   }
-
-//   targetedUser.password = newPassword;
-//   targetedUser.needsPasswordChange = false;
-
-//   // updating using save()
-//   targetedUser.save();
-// };
 
 export const AuthService = {
   loginUser,
   signupUser,
+  refreshToken,
 };

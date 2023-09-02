@@ -13,8 +13,14 @@ router.post(
 
 router.post(
   '/signup',
-  //validateRequest(AuthValidation.signupZodSchema),
+  validateRequest(AuthValidation.signupZodSchema),
   AuthController.signupUser
+);
+
+router.post(
+  '/refresh-token',
+  validateRequest(AuthValidation.refreshTokenZodSchema),
+  AuthController.refreshToken
 );
 
 export const AuthRoutes = router;
