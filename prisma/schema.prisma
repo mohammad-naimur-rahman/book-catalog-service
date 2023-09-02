@@ -11,16 +11,24 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid()) // UUID
+  id         String          @id @default(uuid()) // UUID
   name       String
-  email      String    @unique
+  email      String          @unique
   password   String
-  role       String    // 'admin' or 'customer'
+  role       USER_ROLE_ENUM? @default(CUSTOMER)
   contactNo  String
   address    String
-  profileImg String
+  profileImg String?
   reviewAndRatings ReviewAndRating[]
   orders Order[]
+
+  @@map("users")
+}
+
+
+enum USER_ROLE_ENUM {
+  ADMIN
+  CUSTOMER
 }
 
 
@@ -28,6 +36,8 @@ model Category {
   id    String @id @default(uuid()) // UUID
   title String
   books Book[]
+
+  @@map("categories")
 }
 
 model Book {
@@ -41,6 +51,8 @@ model Book {
   category        Category @relation(fields: [categoryId], references: [id])
   reviewAndRatings ReviewAndRating[]
   orderedBooks OrderedBook[]
+
+  @@map("books")
 }
 
 model ReviewAndRating {
@@ -51,6 +63,8 @@ model ReviewAndRating {
   bookId String
   user   User   @relation(fields: [userId], references: [id])
   book   Book   @relation(fields: [bookId], references: [id])
+
+  @@map("reviewAndRatings")
 }
 
 model OrderedBook {
@@ -60,6 +74,8 @@ model OrderedBook {
   quantity Int
   order    Order    @relation(fields: [orderId], references: [id])
   book     Book     @relation(fields: [bookId], references: [id])
+
+  @@map("orderedBooks")
 }
 
 model Order {
@@ -69,4 +85,6 @@ model Order {
   createdAt DateTime
   user      User          @relation(fields: [userId], references: [id])
   orderedBooks OrderedBook[]
+
+  @@map("orders")
 }
