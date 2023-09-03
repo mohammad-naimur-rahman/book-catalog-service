@@ -38,7 +38,7 @@ const getUserProfile = async (user: {
   });
 
   if (!specificUser) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found!');
   }
 
   return specificUser;

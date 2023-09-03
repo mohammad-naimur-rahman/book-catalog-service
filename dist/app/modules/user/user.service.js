@@ -41,7 +41,7 @@ const getUserProfile = (user) => __awaiter(void 0, void 0, void 0, function* () 
         },
     });
     if (!specificUser) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found!');
     }
     return specificUser;
 });

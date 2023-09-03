@@ -14,11 +14,18 @@ router.get(
   UserController.getAllUsers
 );
 
+router.get(
+  '/profile',
+  validateRequest(UserValidation.getAllUsersZodSchema),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
+  UserController.getUserProfile
+);
+
 router
   .route('/:id')
   .get(
     validateRequest(UserValidation.getOrDeleteUserZodSchema),
-    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOER),
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
     UserController.getUserById
   )
   .patch(

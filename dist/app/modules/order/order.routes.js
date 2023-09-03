@@ -11,7 +11,7 @@ const validateRequest_1 = __importDefault(require("../../middlewares/validateReq
 const order_controller_1 = require("./order.controller");
 const order_validation_1 = require("./order.validation");
 const router = (0, express_1.Router)();
-router.get('/', (0, validateRequest_1.default)(order_validation_1.OrderValidation.getOrdersZodSchema), (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.CUSTOER), order_controller_1.OrderController.getAllORders);
-router.post('/create-order', (0, validateRequest_1.default)(order_validation_1.OrderValidation.createOrderZodSchema), (0, auth_1.default)(user_1.ENUM_USER_ROLE.CUSTOER), order_controller_1.OrderController.createOrder);
-router.get('/:id', (0, validateRequest_1.default)(order_validation_1.OrderValidation.getOrdersZodSchema), (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.CUSTOER), order_controller_1.OrderController.getSingleOrder);
+router.get('/', (0, validateRequest_1.default)(order_validation_1.OrderValidation.getOrdersZodSchema), (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.CUSTOMER), order_controller_1.OrderController.getAllORders);
+router.post('/create-order', (0, validateRequest_1.default)(order_validation_1.OrderValidation.createOrderZodSchema), (0, auth_1.default)(user_1.ENUM_USER_ROLE.CUSTOMER), order_controller_1.OrderController.createOrder);
+router.get('/:id', (0, validateRequest_1.default)(order_validation_1.OrderValidation.getOrdersZodSchema), (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.CUSTOMER), order_controller_1.OrderController.getSingleOrder);
 exports.OrderRoutes = router;
