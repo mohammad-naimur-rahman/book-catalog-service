@@ -15,7 +15,7 @@ model User {
   name       String
   email      String          @unique
   password   String
-  role       USER_ROLE_ENUM? @default(CUSTOMER)
+  role       USER_ROLE_ENUM? @default(customer)
   contactNo  String
   address    String
   profileImg String?
@@ -75,7 +75,7 @@ model OrderedBook {
 model Order {
   id        String        @id @default(uuid())
   userId    String
-  status    ORDER_STATUS_ENUM @default(PENDING)
+  status    ORDER_STATUS_ENUM @default(pending)
   createdAt DateTime @default(now())
   user      User          @relation(fields: [userId], references: [id])
   orderedBooks OrderedBook[]
@@ -84,12 +84,12 @@ model Order {
 }
 
 enum USER_ROLE_ENUM {
-  ADMIN
-  CUSTOMER
+  admin
+  customer
 }
 
 enum ORDER_STATUS_ENUM {
-  PENDING
-  SHIPPED
-  DELIVERED
+  pending
+  shipped
+  delivered
 }

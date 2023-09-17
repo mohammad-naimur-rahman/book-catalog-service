@@ -6,14 +6,12 @@ import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
-import {
-  ILoginUser,
-  ILoginUserResponse,
-  IRefreshTokenResponse,
-} from './auth.interface';
+import { ILoginUser, IRefreshTokenResponse } from './auth.interface';
 import { hashPasswordHook } from './auth.utils';
 
-const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
+const loginUser = async (
+  payload: ILoginUser
+): Promise<{ accessToken: string; refreshToken: string }> => {
   const { email, password } = payload;
   const isUserExist = await prisma.user.findUnique({
     where: { email },

@@ -1,14 +1,15 @@
 import { User } from '@prisma/client';
+import httpStatus from 'http-status';
 import config from '../../../config';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
-import { ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
+import { IRefreshTokenResponse } from './auth.interface';
 import { AuthService } from './auth.service';
 
 const loginUser = catchAsync(async (req, res) => {
   const { ...loginData } = req.body;
   const result = await AuthService.loginUser(loginData);
-  const { refreshToken, ...others } = result;
+  const { refreshToken, accessToken } = result;
 
   const cookieOptions = {
     secure: config.env === 'production',
@@ -17,11 +18,11 @@ const loginUser = catchAsync(async (req, res) => {
 
   res.cookie('refreshToken', refreshToken, cookieOptions);
 
-  sendResponse<ILoginUserResponse>(res, {
+  res.status(httpStatus.OK).json({
     statusCode: 200,
     success: true,
     message: 'User logged in successfully!',
-    data: others,
+    token: accessToken,
   });
 });
 

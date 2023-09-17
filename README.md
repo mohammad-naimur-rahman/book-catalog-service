@@ -93,19 +93,19 @@ Example: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjNGJmNWM4ZC
 
 **Get a single user**
 
-GET - https://book-catalog-service-production.up.railway.app/api/v1/users/c1f4d327-699c-45b2-9c39-3623da72502e
+GET - https://book-catalog-service-production.up.railway.app/api/v1/users/7f289ff9-cab9-485f-a86c-bd81f0887bbf
 
 (Need admin bearer token)
 
 **Update User**
 
-PATCH - https://book-catalog-service-production.up.railway.app/api/v1/users/c1f4d327-699c-45b2-9c39-3623da72502e
+PATCH - https://book-catalog-service-production.up.railway.app/api/v1/users/7f289ff9-cab9-485f-a86c-bd81f0887bbf
 
 (Need admin bearer token)
 
 **Delete User**
 
-DELETE - https://book-catalog-service-production.up.railway.app/api/v1/users/c1f4d327-699c-45b2-9c39-3623da72502e
+DELETE - https://book-catalog-service-production.up.railway.app/api/v1/users/7f289ff9-cab9-485f-a86c-bd81f0887bbf
 
 (Need admin bearer token)
 
@@ -117,7 +117,7 @@ GET - https://book-catalog-service-production.up.railway.app/api/v1/users/profil
 
 **Make a user admin**
 
-PATCH - https://book-catalog-service-production.up.railway.app/api/v1/users/make-admin/c1f4d327-699c-45b2-9c39-3623da72502e
+PATCH - https://book-catalog-service-production.up.railway.app/api/v1/users/make-admin/7f289ff9-cab9-485f-a86c-bd81f0887bbf
 
 (Need admin bearer token)
 
@@ -135,17 +135,17 @@ GET - https://book-catalog-service-production.up.railway.app/api/v1/categories
 
 **Get Single Category**
 
-GET - https://book-catalog-service-production.up.railway.app/api/v1/categories/bad79bad-d72e-4bfb-9a89-fdac4aa5bade
+GET - https://book-catalog-service-production.up.railway.app/api/v1/categories/c617fc8c-f32f-457e-8bcc-8e58526ddc38
 
 **Update Category**
 
-PATCH - https://book-catalog-service-production.up.railway.app/api/v1/categories/bad79bad-d72e-4bfb-9a89-fdac4aa5bade
+PATCH - https://book-catalog-service-production.up.railway.app/api/v1/categories/c617fc8c-f32f-457e-8bcc-8e58526ddc38
 
 (Need admin bearer token)
 
 **Delete Category**
 
-https://book-catalog-service-production.up.railway.app/api/v1/categories/bad79bad-d72e-4bfb-9a89-fdac4aa5bade
+https://book-catalog-service-production.up.railway.app/api/v1/categories/c617fc8c-f32f-457e-8bcc-8e58526ddc38
 
 (Need admin bearer token)
 
@@ -174,20 +174,20 @@ POST - https://book-catalog-service-production.up.railway.app/api/v1/books/creat
 (Need admin bearer token)
 
 **Get a single book**
-GET - https://book-catalog-service-production.up.railway.app/api/v1/books/249c43b0-9035-4796-9f16-55fa001df52f
+GET - https://book-catalog-service-production.up.railway.app/api/v1/books/9ce8cee1-98e5-435a-8d74-44601c9d5401
 
 **Get a book by category**
-https://book-catalog-service-production.up.railway.app/api/v1/books/79735d61-3a4a-4f60-ba97-5a4fa23a5474/category
+https://book-catalog-service-production.up.railway.app/api/v1/books/c617fc8c-f32f-457e-8bcc-8e58526ddc38/category
 
 **Update book**
 
-PATCH - https://book-catalog-service-production.up.railway.app/api/v1/books/249c43b0-9035-4796-9f16-55fa001df52f
+PATCH - https://book-catalog-service-production.up.railway.app/api/v1/books/9ce8cee1-98e5-435a-8d74-44601c9d5401
 
 (Need admin bearer token)
 
 **Delete a book**
 
-DELETE - https://book-catalog-service-production.up.railway.app/api/v1/books/249c43b0-9035-4796-9f16-55fa001df52f
+DELETE - https://book-catalog-service-production.up.railway.app/api/v1/books/9ce8cee1-98e5-435a-8d74-44601c9d5401
 
 (Need admin bearer token)
 
@@ -201,7 +201,7 @@ POST - https://book-catalog-service-production.up.railway.app/api/v1/orders/crea
 
 **GEt single order**
 
-GET - https://book-catalog-service-production.up.railway.app/api/v1/orders/1a219da5-e1eb-4771-aa46-6378d385d551
+GET - https://book-catalog-service-production.up.railway.app/api/v1/orders/9d7b782f-6311-46a7-9775-92def0409323
 
 (Admin needs his bearer token, and user needs his own bearer token)
 

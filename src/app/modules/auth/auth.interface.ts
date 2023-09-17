@@ -12,8 +12,7 @@ export type ISignupUser = {
 };
 
 export type ILoginUserResponse = {
-  accessToken: string;
-  refreshToken?: string;
+  token: string;
 };
 
 export type IRefreshTokenResponse = {
