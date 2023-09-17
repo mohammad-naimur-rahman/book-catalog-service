@@ -1,107 +1,157 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+'use strict';
+var __awaiter =
+  (this && this.__awaiter) ||
+  function (thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P
+        ? value
+        : new P(function (resolve) {
+            resolve(value);
+          });
+    }
     return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator['throw'](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done
+          ? resolve(result.value)
+          : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+  };
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.UserService = void 0;
-const http_status_1 = __importDefault(require("http-status"));
-const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
-const prisma_1 = __importDefault(require("../../../shared/prisma"));
-const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
+const http_status_1 = __importDefault(require('http-status'));
+const ApiError_1 = __importDefault(require('../../../errors/ApiError'));
+const prisma_1 = __importDefault(require('../../../shared/prisma'));
+const getAllUsers = () =>
+  __awaiter(void 0, void 0, void 0, function* () {
     const users = yield prisma_1.default.user.findMany();
     return users;
-});
-const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+  });
+const getUserById = id =>
+  __awaiter(void 0, void 0, void 0, function* () {
     const user = yield prisma_1.default.user.findUnique({
-        where: {
-            id,
-        },
+      where: {
+        id,
+      },
     });
     if (!user) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+      throw new ApiError_1.default(
+        http_status_1.default.NOT_FOUND,
+        'User not found'
+      );
     }
     return user;
-});
-const getUserProfile = (user) => __awaiter(void 0, void 0, void 0, function* () {
+  });
+const getUserProfile = user =>
+  __awaiter(void 0, void 0, void 0, function* () {
     if (!user.userId) {
-        throw new ApiError_1.default(http_status_1.default.FORBIDDEN, 'Access denied');
+      throw new ApiError_1.default(
+        http_status_1.default.FORBIDDEN,
+        'Access denied'
+      );
     }
     const specificUser = yield prisma_1.default.user.findUnique({
-        where: {
-            id: user.userId,
-        },
+      where: {
+        id: user.userId,
+      },
     });
     if (!specificUser) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found!');
+      throw new ApiError_1.default(
+        http_status_1.default.NOT_FOUND,
+        'User not found!'
+      );
     }
     return specificUser;
-});
-const updateUser = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+  });
+const updateUser = (id, payload) =>
+  __awaiter(void 0, void 0, void 0, function* () {
     const user = yield prisma_1.default.user.findUnique({
-        where: {
-            id,
-        },
+      where: {
+        id,
+      },
     });
     if (!user) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+      throw new ApiError_1.default(
+        http_status_1.default.NOT_FOUND,
+        'User not found'
+      );
     }
     const updatedUser = prisma_1.default.user.update({
-        where: {
-            id,
-        },
-        data: payload,
+      where: {
+        id,
+      },
+      data: payload,
     });
     return updatedUser;
-});
-const deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+  });
+const deleteUser = id =>
+  __awaiter(void 0, void 0, void 0, function* () {
     const user = yield prisma_1.default.user.findUnique({
-        where: {
-            id,
-        },
+      where: {
+        id,
+      },
     });
     if (!user) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+      throw new ApiError_1.default(
+        http_status_1.default.NOT_FOUND,
+        'User not found'
+      );
     }
     yield prisma_1.default.user.delete({
-        where: {
-            id,
-        },
+      where: {
+        id,
+      },
     });
     return user;
-});
-const makeAdmin = (id) => __awaiter(void 0, void 0, void 0, function* () {
+  });
+const makeAdmin = id =>
+  __awaiter(void 0, void 0, void 0, function* () {
     const user = yield prisma_1.default.user.findUnique({
-        where: {
-            id,
-        },
+      where: {
+        id,
+      },
     });
     if (!user) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+      throw new ApiError_1.default(
+        http_status_1.default.NOT_FOUND,
+        'User not found'
+      );
     }
     const updatedUser = yield prisma_1.default.user.update({
-        where: {
-            id,
-        },
-        data: {
-            role: 'admin',
-        },
+      where: {
+        id,
+      },
+      data: {
+        role: 'admin',
+      },
     });
     return updatedUser;
-});
+  });
 exports.UserService = {
-    getAllUsers,
-    getUserById,
-    getUserProfile,
-    updateUser,
-    deleteUser,
-    makeAdmin,
+  getAllUsers,
+  getUserById,
+  getUserProfile,
+  updateUser,
+  deleteUser,
+  makeAdmin,
 };

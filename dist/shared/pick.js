@@ -1,5 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 /**
  * Returns a new object containing only the specified properties from the input object.
  *
@@ -8,12 +8,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @return {Partial<T>} - A new object with only the specified properties.
  */
 const pick = (obj, keys) => {
-    const finalObj = {};
-    for (const key of keys) {
-        if (obj && Object.hasOwnProperty.call(obj, key)) {
-            finalObj[key] = obj[key];
-        }
+  const finalObj = {};
+  for (const key of keys) {
+    if (obj && Object.hasOwnProperty.call(obj, key)) {
+      finalObj[key] = obj[key];
     }
-    return finalObj;
+  }
+  return finalObj;
 };
 exports.default = pick;
