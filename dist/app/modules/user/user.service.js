@@ -92,7 +92,7 @@ const makeAdmin = (id) => __awaiter(void 0, void 0, void 0, function* () {
             id,
         },
         data: {
-            role: 'ADMIN',
+            role: 'admin',
         },
     });
     return updatedUser;

@@ -104,7 +104,7 @@ const makeAdmin = async (id: string): Promise<User | null> => {
       id,
     },
     data: {
-      role: 'ADMIN',
+      role: 'admin',
     },
   });
 
